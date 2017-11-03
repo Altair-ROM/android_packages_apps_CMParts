@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
+    <!-- Quick Settings -->
+    <string name="quick_settings_title">Quick Settings</string>
+
+    <string name="qs_tile_titles_visibility_title">Tile labels</string>
+    <string name="qs_tile_titles_visibility_summaryOn">Labels are shown</string>
+    <string name="qs_tile_titles_visibility_summaryOff">Labels are hidden</string>
+
+    <string name="qs_columns_portrait_title">Number of tiles per row (portrait)</string>
+    <string name="qs_columns_landscape_title">Number of tiles per row (landscape)</string>
+    <string name="qs_columns_showing">Tiles per row: %1$s</string>
+    <string name="qs_rows_portrait_title">Number of rows (portrait)</string>
+    <string name="qs_rows_landscape_title">Number of rows (landscape)</string>
+    <string name="qs_rows_showing">Rows: %1$s</string>
+
     <!-- Confirm Power Off selection on Power menu-->
     <string name="confirm_shutdown_switch_title">Shutdown confirmation dialog</string>
     <string name="confirm_shutdown_switch_desc">When shutdown button is tapped on power menu, add a dialog to confirm shutdown</string>

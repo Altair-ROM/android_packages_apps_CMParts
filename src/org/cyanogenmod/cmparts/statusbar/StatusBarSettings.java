@@ -16,7 +16,11 @@
  */
 package org.cyanogenmod.cmparts.statusbar;
 
+import android.content.ContentResolver;
 import android.os.Bundle;
+import android.os.UserHandle;
+import android.provider.Settings;
+import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.Preference.OnPreferenceChangeListener;
 import android.text.format.DateFormat;
@@ -35,6 +39,10 @@ public class StatusBarSettings extends SettingsPreferenceFragment
     private static final String STATUS_BAR_BATTERY_STYLE = "status_bar_battery_style";
     private static final String STATUS_BAR_SHOW_BATTERY_PERCENT = "status_bar_show_battery_percent";
     private static final String STATUS_BAR_QUICK_QS_PULLDOWN = "qs_quick_pulldown";
+    private static final String STATUS_BAR_QS_COLUMNS_PORTRAIT = "qs_columns_portrait";
+    private static final String STATUS_BAR_QS_COLUMNS_LANDSCAPE = "qs_columns_landscape";
+    private static final String STATUS_BAR_QS_ROWS_PORTRAIT = "qs_rows_portrait";
+    private static final String STATUS_BAR_QS_ROWS_LANDSCAPE = "qs_rows_landscape";
 
     private static final int STATUS_BAR_BATTERY_STYLE_HIDDEN = 4;
     private static final int STATUS_BAR_BATTERY_STYLE_TEXT = 6;
@@ -47,11 +55,17 @@ public class StatusBarSettings extends SettingsPreferenceFragment
     private CMSystemSettingListPreference mStatusBarAmPm;
     private CMSystemSettingListPreference mStatusBarBattery;
     private CMSystemSettingListPreference mStatusBarBatteryShowPercent;
+    private ListPreference mColumnsPortrait;
+    private ListPreference mColumnsLandscape;
+    private ListPreference mRowsPortrait;
+    private ListPreference mRowsLandscape;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.status_bar_settings);
+
+        final ContentResolver resolver = getActivity().getContentResolver();
 
         mStatusBarClock = (CMSystemSettingListPreference) findPreference(STATUS_BAR_CLOCK_STYLE);
         mStatusBarBatteryShowPercent =
@@ -72,6 +86,23 @@ public class StatusBarSettings extends SettingsPreferenceFragment
                 (CMSystemSettingListPreference) findPreference(STATUS_BAR_QUICK_QS_PULLDOWN);
         mQuickPulldown.setOnPreferenceChangeListener(this);
         updateQuickPulldownSummary(mQuickPulldown.getIntValue(0));
+
+        int rowsPortrait = Settings.Secure.getInt(resolver, Settings.Secure.QS_ROWS_PORTRAIT, 3);
+        mRowsPortrait = initList(STATUS_BAR_QS_ROWS_PORTRAIT, rowsPortrait);
+        updateNumRowsSummary(mRowsPortrait, rowsPortrait);
+
+        int defaultValue = getResources().getInteger(com.android.internal.R.integer.config_qs_num_rows_landscape_default);
+        int rowsLandscape = Settings.Secure.getInt(resolver, Settings.Secure.QS_ROWS_LANDSCAPE, defaultValue);
+        mRowsLandscape = initList(STATUS_BAR_QS_ROWS_LANDSCAPE, rowsLandscape);
+        updateNumRowsSummary(mRowsLandscape, rowsLandscape);
+
+        int columnsPortrait = Settings.Secure.getInt(resolver, Settings.Secure.QS_COLUMNS_PORTRAIT, 5);
+        mColumnsPortrait = initList(STATUS_BAR_QS_COLUMNS_PORTRAIT, columnsPortrait);
+        updateNumColumnsSummary(mColumnsPortrait, columnsPortrait);
+
+        int columnsLandscape = Settings.Secure.getInt(resolver, Settings.Secure.QS_COLUMNS_LANDSCAPE, 3);
+        mColumnsLandscape = initList(STATUS_BAR_QS_COLUMNS_LANDSCAPE, columnsLandscape);
+        updateNumColumnsSummary(mColumnsLandscape, columnsLandscape);
     }
 
     @Override
@@ -85,13 +116,55 @@ public class StatusBarSettings extends SettingsPreferenceFragment
         }
     }
 
+    private ListPreference initList(String key, int value) {
+        ListPreference list = (ListPreference) getPreferenceScreen().findPreference(key);
+        if (list == null) return null;
+        list.setValue(Integer.toString(value));
+        list.setSummary(list.getEntry());
+        list.setOnPreferenceChangeListener(this);
+        return list;
+    }
+
+    private void updateNumColumnsSummary(ListPreference preference, int numColumns) {
+        String prefix = (String) preference.getEntries()[preference.findIndexOfValue(String
+                .valueOf(numColumns))];
+        preference.setSummary(getResources().getString(R.string.qs_columns_showing, prefix));
+    }
+
+    private void updateNumRowsSummary(ListPreference preference, int numRows) {
+        String prefix = (String) preference.getEntries()[preference.findIndexOfValue(String
+                .valueOf(numRows))];
+        preference.setSummary(getResources().getString(R.string.qs_rows_showing, prefix));
+    }
+
     @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
+        final ContentResolver resolver = getActivity().getContentResolver();
         int value = Integer.parseInt((String) newValue);
         if (preference == mQuickPulldown) {
             updateQuickPulldownSummary(value);
         } else if (preference == mStatusBarBattery) {
             enableStatusBarBatteryDependents(value);
+        } else if (preference == mRowsPortrait) {
+            int numRows = Integer.valueOf((String) newValue);
+            Settings.Secure.putIntForUser(resolver, Settings.Secure.QS_ROWS_PORTRAIT,
+                    numRows, UserHandle.USER_CURRENT);
+            updateNumRowsSummary(mRowsPortrait, numRows);
+        } else if (preference == mRowsLandscape) {
+            int numRows = Integer.valueOf((String) newValue);
+            Settings.Secure.putIntForUser(resolver, Settings.Secure.QS_ROWS_LANDSCAPE,
+                    numRows, UserHandle.USER_CURRENT);
+            updateNumRowsSummary(mRowsLandscape, numRows);
+        } else if (preference == mColumnsPortrait) {
+            int numColumns = Integer.valueOf((String) newValue);
+            Settings.Secure.putIntForUser(resolver, Settings.Secure.QS_COLUMNS_PORTRAIT,
+                    numColumns, UserHandle.USER_CURRENT);
+            updateNumColumnsSummary(mColumnsPortrait, numColumns);
+        } else if (preference == mColumnsLandscape) {
+            int numColumns = Integer.valueOf((String) newValue);
+            Settings.Secure.putIntForUser(resolver, Settings.Secure.QS_COLUMNS_LANDSCAPE,
+                    numColumns, UserHandle.USER_CURRENT);
+            updateNumColumnsSummary(mColumnsLandscape, numColumns);
         }
         return true;
     }
