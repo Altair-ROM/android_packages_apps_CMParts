@@ -8,6 +8,12 @@
     <string name="qs_tile_titles_visibility_summaryOn">Labels are shown</string>
     <string name="qs_tile_titles_visibility_summaryOff">Labels are hidden</string>
 
+    <string name="qs_bt_easy_toggle_title">Bluetooth tile easy toggle</string>
+    <string name="qs_bt_easy_toggle_summary">Enable one tap action to enable or disable Bluetooth</string>
+
+    <string name="qs_wifi_easy_toggle_title">Wi-Fi tile easy toggle</string>
+    <string name="qs_wifi_easy_toggle_summary">Enable one tap action to enable or disable Wi-Fi</string>
+
     <string name="qs_columns_portrait_title">Number of tiles per row (portrait)</string>
     <string name="qs_columns_landscape_title">Number of tiles per row (landscape)</string>
     <string name="qs_columns_showing">Tiles per row: %1$s</string>

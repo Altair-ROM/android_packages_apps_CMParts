@@ -37,6 +37,18 @@
             android:summaryOff="@string/qs_tile_titles_visibility_summaryOff"
             android:defaultValue="true" />
 
+        <cyanogenmod.preference.SecureSettingSwitchPreference
+            android:key="qs_bt_easy_toggle"
+            android:title="@string/qs_bt_easy_toggle_title"
+            android:summary="@string/qs_bt_easy_toggle_summary"
+            android:defaultValue="false" />
+
+        <cyanogenmod.preference.SecureSettingSwitchPreference
+            android:key="qs_wifi_easy_toggle"
+            android:title="@string/qs_wifi_easy_toggle_title"
+            android:summary="@string/qs_wifi_easy_toggle_summary"
+            android:defaultValue="false" />
+
         <ListPreference
             android:key="qs_columns_portrait"
             android:dialogTitle="@string/qs_columns_portrait_title"
