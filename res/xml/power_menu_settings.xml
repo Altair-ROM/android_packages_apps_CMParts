@@ -52,16 +52,6 @@
     <CheckBoxPreference
         android:key="silent"
         android:title="@string/power_menu_sound_title"
-        android:defaultValue="true" />
-
-    <CheckBoxPreference
-        android:key="voiceassist"
-        android:title="@string/power_menu_sound_title"
-        android:defaultValue="true" />
-
-    <CheckBoxPreference
-        android:key="assist"
-        android:title="@string/power_menu_sound_title"
-        android:defaultValue="true" />
+        android:defaultValue="false" />
 
 </PreferenceScreen>

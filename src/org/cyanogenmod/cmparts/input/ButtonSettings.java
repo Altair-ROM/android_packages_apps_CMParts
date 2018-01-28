@@ -597,8 +597,25 @@ public class ButtonSettings extends SettingsPreferenceFragment implements
         }
 
         /* Toggle hardkey control availability depending on navbar state */
+        if (mNavigationPreferencesCat != null) {
+            if (navbarEnabled) {
+                mNavigationPreferencesCat.addPreference(mNavigationHomeLongPressAction);
+                mNavigationPreferencesCat.addPreference(mNavigationHomeDoubleTapAction);
+            } else {
+                mNavigationPreferencesCat.removePreference(mNavigationHomeLongPressAction);
+                mNavigationPreferencesCat.removePreference(mNavigationHomeDoubleTapAction);
+            }
+        }
         if (homeCategory != null) {
-            homeCategory.setEnabled(!navbarEnabled);
+            if (mHomeAnswerCall != null) {
+                mHomeAnswerCall.setEnabled(!navbarEnabled);
+            }
+            if (mHomeLongPressAction != null) {
+                mHomeLongPressAction.setEnabled(!navbarEnabled);
+            }
+            if (mHomeDoubleTapAction != null) {
+                mHomeDoubleTapAction.setEnabled(!navbarEnabled);
+            }
         }
         if (backCategory != null) {
             backCategory.setEnabled(!navbarEnabled);
